@@ -138,11 +138,12 @@ public class MinecraftRcon extends PApplet
   private void sendPacket(MinecraftRconPacket packet)
   {
 //    println(
-//      "Sending packet with"
+//      "Sending  packet with"
 //      + " requestID " + packet.requestId
 //      + " type " + packet.type
-//      + " payload: \"" + bytesToString(packet.payload) + "\""
-//      + " (" + packet.payload.length + ")"
+//      + " " + (packet.payload == null
+//               ? "no payload"
+//               : "payload \"" + bytesToString(packet.payload) + "\"" + " (" + packet.payload.length + ")")
 //    );
 
     client.write(packet.toByteArray());
@@ -154,8 +155,9 @@ public class MinecraftRcon extends PApplet
 //      "Received packet with"
 //      + " requestID " + packet.requestId
 //      + " type " + packet.type
-//      + " payload: \"" + bytesToString(packet.payload) + "\""
-//      + " (" + packet.payload.length + ")"
+//      + " " + (packet.payload == null
+//               ? "no payload"
+//               : "payload \"" + bytesToString(packet.payload) + "\"" + " (" + packet.payload.length + ")")
 //    );
 
     if (loginState == LOGINSTATE_NONE) {
