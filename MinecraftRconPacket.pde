@@ -4,6 +4,7 @@ import java.nio.BufferUnderflowException;
 
 public class MinecraftRconPacket
 {
+  public static final int TYPE_RESPONSE = 0;
   public static final int TYPE_COMMAND = 2;
   public static final int TYPE_LOGIN = 3;
 
