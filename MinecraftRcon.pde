@@ -82,7 +82,7 @@ public class MinecraftRcon extends PApplet
         }
       }
     };
-        
+
     MinecraftRconPacket commandPacket = new MinecraftRconPacket();
     commandPacket.requestId = requestId;
     commandPacket.type = MinecraftRconPacket.TYPE_COMMAND;
@@ -93,11 +93,11 @@ public class MinecraftRcon extends PApplet
 
     new Timer().schedule(commandTimeout, COMMAND_TIMEOUT * 1000);
     sendPacket(commandPacket);
-    
+
     while (commandInProgress) {
       delay(50);
     }
-    
+
     commandTimeout.cancel();
 
     if (commandResponsePacket == null) {
@@ -144,7 +144,7 @@ public class MinecraftRcon extends PApplet
 //      + " payload: \"" + bytesToString(packet.payload) + "\""
 //      + " (" + packet.payload.length + ")"
 //    );
-    
+
     client.write(packet.toByteArray());
   }
 
@@ -166,7 +166,7 @@ public class MinecraftRcon extends PApplet
       }
       return;
     }
-    
+
     if (commandInProgress) {
       commandResponsePacket = packet;
       commandInProgress = false;

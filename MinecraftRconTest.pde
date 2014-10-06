@@ -2,7 +2,7 @@ MinecraftRcon mcr;
 
 void setup()
 {
-  mcr = new MinecraftRcon("192.168.1.3", 25575, "iskele");
+  mcr = new MinecraftRcon("localhost", 25575, "password");
 
   boolean loggedIn = mcr.login();
   println("Logged in? " + (loggedIn ? "yes" : "no"));
