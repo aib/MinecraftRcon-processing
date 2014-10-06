@@ -7,6 +7,12 @@ public class MinecraftRconPacket
   public static final int TYPE_COMMAND = 2;
   public static final int TYPE_LOGIN = 3;
 
+  public static final int PACKET_PARSE_SUCCESS = 0;
+  public static final int PACKET_PARSE_ERROR_LENGTH = 1;
+  public static final int PACKET_PARSE_ERROR_BUFFER_SIZE = 2;
+  public static final int PACKET_PARSE_ERROR_PAYLOAD = 3;
+  public static final int PACKET_PARSE_ERROR_PADDING = 4;
+
   public int requestId;
   public int type;
   public byte[] payload;
@@ -33,45 +39,43 @@ public class MinecraftRconPacket
 
     return bytes;
   }
-}
 
-public MinecraftRconPacket fromByteArray(byte[] bytes)
-{
-  try {
-    MinecraftRconPacket packet = new MinecraftRconPacket();
+  public int parseFromByteArray(byte[] bytes)
+  {
+    try {
+      ByteBuffer packetBuffer = ByteBuffer.wrap(bytes);
+      packetBuffer.order(ByteOrder.LITTLE_ENDIAN);
 
-    ByteBuffer packetBuffer = ByteBuffer.wrap(bytes);
-    packetBuffer.order(ByteOrder.LITTLE_ENDIAN);
+      int packetLength = packetBuffer.getInt();
 
-    int packetLength = packetBuffer.getInt();
+      if (packetLength != bytes.length - 4) {
+        return PACKET_PARSE_ERROR_LENGTH;
+      }
 
-    if (packetLength != bytes.length - 4) {
-      return null;
+      int payloadLength = packetLength - 4 - 4 - 2;
+
+      if (payloadLength < 0) {
+        return PACKET_PARSE_ERROR_PAYLOAD;
+      }
+
+      this.requestId = packetBuffer.getInt();
+      this.type = packetBuffer.getInt();
+      byte[] payload = new byte[payloadLength];
+      packetBuffer.get(payload);
+      this.payload = payload;
+
+      if (packetBuffer.get() != (byte) 0) {
+        return PACKET_PARSE_ERROR_PADDING;
+      }
+
+      if (packetBuffer.get() != (byte) 0) {
+        return PACKET_PARSE_ERROR_PADDING;
+      }
+
+      return PACKET_PARSE_SUCCESS;
+    } catch (BufferUnderflowException e) {
+      return PACKET_PARSE_ERROR_BUFFER_SIZE;
     }
-
-    int payloadLength = packetLength - 4 - 4 - 2;
-
-    if (payloadLength < 0) {
-      return null;
-    }
-
-    packet.requestId = packetBuffer.getInt();
-    packet.type = packetBuffer.getInt();
-    byte[] payload = new byte[payloadLength];
-    packetBuffer.get(payload);
-    packet.payload = payload;
-
-    if (packetBuffer.get() != (byte) 0) {
-      return null;
-    }
-
-    if (packetBuffer.get() != (byte) 0) {
-      return null;
-    }
-
-    return packet;
-  } catch (BufferUnderflowException e) {
-    return null;
   }
 }
 

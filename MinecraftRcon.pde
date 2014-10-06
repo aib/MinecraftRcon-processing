@@ -183,9 +183,10 @@ public class MinecraftRcon extends PApplet
     receiveBuffer.rewind();
     receiveBuffer.get(allBytes);
 
-    MinecraftRconPacket packet = fromByteArray(allBytes);
+    MinecraftRconPacket packet = new MinecraftRconPacket();
+    int parseStatus = packet.parseFromByteArray(allBytes);
 
-    if (packet != null) {
+    if (parseStatus == MinecraftRconPacket.PACKET_PARSE_SUCCESS) {
       receiveBuffer.clear();
       packetReceived(packet);
     }
